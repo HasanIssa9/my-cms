@@ -10,6 +10,7 @@ export default function Posts({ type }) {
   const [search, setSearch]   = useState('');
   const [filter, setFilter]   = useState('');
   const [loading, setLoading] = useState(true);
+  const [error, setError]     = useState(null);
   const [deleting, setDeleting] = useState(null);
 
   const isPost   = type === 'post';
@@ -21,7 +22,10 @@ export default function Posts({ type }) {
 
   function load() {
     setLoading(true);
-    api.get(`/posts?type=${type}`).then(r => { setPosts(r.data); setLoading(false); });
+    setError(null);
+    api.get(`/posts?type=${type}`)
+      .then(r => { setPosts(r.data); setLoading(false); })
+      .catch(() => { setError(true); setLoading(false); });
   }
   useEffect(() => { load(); }, [type]);
 
@@ -63,7 +67,14 @@ export default function Posts({ type }) {
 
       {/* Table */}
       <div className="card" style={{ overflow: 'hidden' }}>
-        {loading ? (
+        {error ? (
+          <div style={{ padding: '3.5rem', textAlign: 'center' }}>
+            <p style={{ color: 'var(--danger)', fontSize: '.875rem', marginBottom: '.75rem' }}>
+              ⚠ تعذّر الاتصال بالخادم
+            </p>
+            <button className="btn btn-ghost btn-sm" onClick={load}>إعادة المحاولة</button>
+          </div>
+        ) : loading ? (
           <div style={{ padding: '1.25rem', display: 'flex', flexDirection: 'column', gap: '.625rem' }}>
             {[1,2,3,4].map(i => <div key={i} className="skeleton" style={{ height: 52 }} />)}
           </div>

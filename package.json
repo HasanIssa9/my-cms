@@ -5,6 +5,8 @@
   "scripts": {
     "install:all": "npm install --prefix backend && npm install --prefix frontend",
     "dev": "start \"CMS Backend\" cmd /k \"cd backend && npm run dev\" && start \"CMS Frontend\" cmd /k \"cd frontend && npm run dev\"",
-    "start": "start \"CMS Backend\" cmd /k \"cd backend && npm start\" && start \"CMS Frontend\" cmd /k \"cd frontend && npm run dev\""
+    "start": "start \"CMS Backend\" cmd /k \"cd backend && npm start\" && start \"CMS Frontend\" cmd /k \"cd frontend && npm run dev\"",
+    "export": "npm run build --prefix frontend && node export-pages.js",
+    "deploy": "npm run build --prefix frontend && node export-pages.js && firebase deploy --only hosting"
   }
 }
